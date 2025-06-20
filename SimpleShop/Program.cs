@@ -1,9 +1,11 @@
+using System.Globalization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services; // For IEmailSender if you are using Identity's one
 using Microsoft.EntityFrameworkCore;
 using SimpleShop.Data;
 using SimpleShop.Models;
 using SimpleShop.Services; // Your EmailSender implementation
+
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +52,9 @@ builder.Services.AddScoped<ShoppingCart>(sp => ShoppingCart.GetCart(sp));
 // EmailSender (使用 Identity 的 IEmailSender 接口)
 builder.Services.AddTransient<Microsoft.AspNetCore.Identity.UI.Services.IEmailSender, SimpleShop.Services.EmailSender>();
 
+var cultureInfo = new CultureInfo("zh-TW");
+CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
 var app = builder.Build();
 
