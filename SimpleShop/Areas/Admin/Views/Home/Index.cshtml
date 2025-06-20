@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "管理後台儀表板";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">商品管理</h5>
+                <p class="card-text">新增、編輯或刪除商品。</p>
+                <a asp-area="Admin" asp-controller="Products" asp-action="Index" class="btn btn-primary">前往商品管理</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">訂單管理</h5>
+                <p class="card-text">查看訂單詳情並處理出貨。</p>
+                <a asp-area="Admin" asp-controller="Orders" asp-action="Index" class="btn btn-primary">前往訂單管理</a>
+            </div>
+        </div>
+    </div>
+    @* 可以加入更多儀表板元素，例如統計資訊 *@
+</div>

@@ -1,0 +1,33 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+/* Custom styles for product cards */
+.card-img-top {
+    width: 100%;
+    height: 200px; /* Or your preferred height */
+    object-fit: cover; /* This will make sure your images cover the area, cropping if necessary */
+}
+
+/* Fix for _LoginPartial dropdown alignment in some Bootstrap versions */
+.navbar-nav .dropdown-menu {
+    position: absolute;
+}

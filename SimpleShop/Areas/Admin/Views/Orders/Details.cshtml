@@ -1,0 +1,104 @@
+﻿@model SimpleShop.Models.Order
+
+@{
+    ViewData["Title"] = $"訂單詳情 #{Model.Id}";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<div>
+    <h4>訂單資訊</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">訂單ID</dt>
+        <dd class="col-sm-10">@Model.Id</dd>
+
+        <dt class="col-sm-2">顧客</dt>
+        <dd class="col-sm-10">@(Model.User?.FullName ?? Model.User?.Email ?? "N/A")</dd>
+
+        <dt class="col-sm-2">訂單日期</dt>
+        <dd class="col-sm-10">@Model.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</dd>
+
+        <dt class="col-sm-2">總金額</dt>
+        <dd class="col-sm-10">@Model.TotalAmount.ToString("C")</dd>
+
+        <dt class="col-sm-2">狀態</dt>
+        <dd class="col-sm-10">
+            <span class="badge @GetStatusBadgeClass(Model.Status)">@Model.Status.ToString()</span>
+        </dd>
+
+        <dt class="col-sm-2">收貨地址</dt>
+        <dd class="col-sm-10">@Model.ShippingAddress</dd>
+
+        @if (Model.Status == SimpleShop.Models.Enums.OrderStatus.Shipped || Model.Status == SimpleShop.Models.Enums.OrderStatus.Delivered)
+        {
+            <dt class="col-sm-2">出貨日期</dt>
+            <dd class="col-sm-10">@Model.ShippedDate?.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</dd>
+            <dt class="col-sm-2">追蹤號碼</dt>
+            <dd class="col-sm-10">@(string.IsNullOrEmpty(Model.TrackingNumber) ? "N/A" : Model.TrackingNumber)</dd>
+        }
+    </dl>
+</div>
+
+<h4>訂單項目</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th>商品圖片</th>
+            <th>商品名稱</th>
+            <th>數量</th>
+            <th>購買時單價</th>
+            <th>小計</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderItems)
+        {
+            <tr>
+                <td>
+                    @if (!string.IsNullOrEmpty(item.Product?.ImageUrl))
+                    {
+                        <img src="@item.Product.ImageUrl" alt="@item.Product.Name" style="width:50px; height:50px; object-fit:cover;" />
+                    }
+                </td>
+                <td>@item.Product?.Name</td>
+                <td>@item.Quantity</td>
+                <td>@item.PriceAtPurchase.ToString("C")</td>
+                <td>@((item.Quantity * item.PriceAtPurchase).ToString("C"))</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<hr />
+
+@if (Model.Status == SimpleShop.Models.Enums.OrderStatus.Pending || Model.Status == SimpleShop.Models.Enums.OrderStatus.Processing)
+{
+    <h4>標記為已出貨</h4>
+    <form asp-action="ShipOrder" asp-route-id="@Model.Id" method="post">
+        @Html.AntiForgeryToken()
+        <div class="form-group mb-2">
+            <label for="trackingNumber" class="control-label">貨運追蹤號碼 (可選)</label>
+            <input type="text" id="trackingNumber" name="trackingNumber" class="form-control" />
+        </div>
+        <button type="submit" class="btn btn-success">確認出貨</button>
+    </form>
+}
+
+<div>
+    <a asp-action="Index" class="btn btn-secondary mt-3">返回訂單列表</a>
+</div>
+
+@functions {
+    string GetStatusBadgeClass(SimpleShop.Models.Enums.OrderStatus status)
+    {
+        return status switch
+        {
+            SimpleShop.Models.Enums.OrderStatus.Pending => "bg-warning text-dark",
+            SimpleShop.Models.Enums.OrderStatus.Processing => "bg-info text-dark",
+            SimpleShop.Models.Enums.OrderStatus.Shipped => "bg-primary",
+            SimpleShop.Models.Enums.OrderStatus.Delivered => "bg-success",
+            SimpleShop.Models.Enums.OrderStatus.Cancelled => "bg-danger",
+            _ => "bg-secondary",
+        };
+    }
+}

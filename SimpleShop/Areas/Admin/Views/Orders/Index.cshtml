@@ -1,0 +1,52 @@
+﻿@model IEnumerable<SimpleShop.Models.Order>
+
+@{
+    ViewData["Title"] = "訂單管理";
+}
+
+<h1>訂單管理</h1>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>訂單ID</th>
+            <th>顧客</th>
+            <th>訂單日期</th>
+            <th>總金額</th>
+            <th>狀態</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var order in Model)
+        {
+            <tr>
+                <td>@order.Id</td>
+                <td>@(order.User?.Email ?? "N/A")</td>
+                <td>@order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@order.TotalAmount.ToString("C")</td>
+                <td>
+                    <span class="badge @GetStatusBadgeClass(order.Status)">@order.Status.ToString()</span>
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-info">查看詳情</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@functions {
+    string GetStatusBadgeClass(SimpleShop.Models.Enums.OrderStatus status)
+    {
+        return status switch
+        {
+            SimpleShop.Models.Enums.OrderStatus.Pending => "bg-warning text-dark",
+            SimpleShop.Models.Enums.OrderStatus.Processing => "bg-info text-dark",
+            SimpleShop.Models.Enums.OrderStatus.Shipped => "bg-primary",
+            SimpleShop.Models.Enums.OrderStatus.Delivered => "bg-success",
+            SimpleShop.Models.Enums.OrderStatus.Cancelled => "bg-danger",
+            _ => "bg-secondary",
+        };
+    }
+}
