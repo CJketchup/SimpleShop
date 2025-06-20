@@ -1,0 +1,69 @@
+﻿@model IEnumerable<SimpleShop.Models.CartItem>
+
+@{
+    ViewData["Title"] = "您的購物車";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (!Model.Any())
+{
+    <p>您的購物車是空的。</p>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-primary">繼續購物</a>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>商品</th>
+                <th></th>
+                <th>價格</th>
+                <th>數量</th>
+                <th>小計</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl" alt="@item.ProductName" style="width: 50px; height: 50px; object-fit: cover;" />
+                        }
+                    </td>
+                    <td>@item.ProductName</td>
+                    <td>@item.Price.ToString("C")</td>
+                    <td>
+                        <form asp-action="UpdateQuantity" method="post" class="d-inline-flex align-items-center">
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control form-control-sm" style="width: 70px;" />
+                            <button type="submit" class="btn btn-sm btn-outline-secondary ms-1">更新</button>
+                        </form>
+                    </td>
+                    <td>@item.SubTotal.ToString("C")</td>
+                    <td>
+                        <form asp-action="RemoveFromCart" method="post">
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <button type="submit" class="btn btn-sm btn-danger">移除</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4" class="text-end"><strong>總計:</strong></td>
+                <td><strong>@ViewBag.Total.ToString("C")</strong></td>
+                <td></td>
+            </tr>
+        </tfoot>
+    </table>
+
+    <div class="text-end">
+        <a asp-controller="Order" asp-action="Checkout" class="btn btn-success">前往結帳</a>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary ms-2">繼續購物</a>
+    </div>
+}

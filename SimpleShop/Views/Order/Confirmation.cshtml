@@ -1,0 +1,40 @@
+﻿@model SimpleShop.Models.Order
+
+@{
+    ViewData["Title"] = "訂單確認";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>感謝您的訂購！您的訂單已成功建立。</p>
+<p><strong>訂單編號:</strong> @Model.Id</p>
+<p><strong>訂單日期:</strong> @Model.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</p>
+<p><strong>總金額:</strong> @Model.TotalAmount.ToString("C")</p>
+<p><strong>收貨地址:</strong> @Model.ShippingAddress</p>
+<p><strong>訂單狀態:</strong> @Model.Status.ToString()</p>
+
+<h3>訂單明細</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>商品</th>
+            <th>數量</th>
+            <th>單價 (購買時)</th>
+            <th>小計</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderItems)
+        {
+            <tr>
+                <td>@item.Product?.Name</td>
+                <td>@item.Quantity</td>
+                <td>@item.PriceAtPurchase.ToString("C")</td>
+                <td>@((item.Quantity * item.PriceAtPurchase).ToString("C"))</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-controller="Home" asp-action="Index" class="btn btn-primary">返回首頁</a>
+<a asp-controller="Order" asp-action="MyOrders" class="btn btn-info ms-2">查看我的訂單</a>

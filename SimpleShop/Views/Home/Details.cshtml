@@ -1,0 +1,49 @@
+﻿@model SimpleShop.Models.Product
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<h1>@Model.Name</h1>
+
+<div>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+            {
+                <img src="@Model.ImageUrl" class="img-fluid" alt="@Model.Name">
+            }
+            else
+            {
+                <img src="https://via.placeholder.com/600x400.png?text=No+Image" class="img-fluid" alt="No Image Available">
+            }
+        </div>
+        <div class="col-md-6">
+            <h4>@Model.Name</h4>
+            <p>@Model.Description</p>
+            <p><strong>價格:</strong> @Model.Price.ToString("C")</p>
+            <p><strong>庫存:</strong> @Model.StockQuantity</p>
+
+            @if (Model.StockQuantity > 0)
+            {
+                <form asp-controller="Cart" asp-action="AddToCart" method="post">
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <div class="form-group mb-2">
+                        <label for="quantity">數量:</label>
+                        <input type="number" name="quantity" value="1" min="1" max="@Model.StockQuantity" class="form-control" style="width: 100px;" />
+                    </div>
+                    <button type="submit" class="btn btn-primary">加入購物車</button>
+                </form>
+            }
+            else
+            {
+                <p class="text-danger">此商品已售罄。</p>
+            }
+        </div>
+    </div>
+    <hr />
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-secondary">返回商品列表</a>
+</div>

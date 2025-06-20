@@ -1,0 +1,42 @@
+﻿@model IEnumerable<SimpleShop.Models.Order>
+
+@{
+    ViewData["Title"] = "我的訂單";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+@if (!Model.Any())
+{
+    <p>您目前沒有任何訂單。</p>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>訂單編號</th>
+                <th>訂單日期</th>
+                <th>總金額</th>
+                <th>狀態</th>
+                <th>收貨地址</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>@order.Id</td>
+                    <td>@order.OrderDate.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@order.TotalAmount.ToString("C")</td>
+                    <td>@order.Status.ToString()</td>
+                    <td>@order.ShippingAddress</td>
+                    <td>
+                        <a asp-action="Confirmation" asp-route-id="@order.Id" class="btn btn-sm btn-info">查看詳情</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,80 @@
+﻿// 檔案：SimpleShop/Views/Order/Checkout.cshtml
+@model SimpleShop.Models.OrderCheckoutViewModel // <<--- 更改模型類型
+@{
+    ViewData["Title"] = "結帳";
+}
+
+<h1>@ViewData["Title"]</h1>
+<h4>請填寫您的收貨資訊</h4>
+<hr />
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Checkout" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div> @* 或者 "All" 來顯示所有錯誤 *@
+
+            <div class="form-group mb-3">
+                <label asp-for="ShippingAddress" class="control-label"></label> @* asp-for 會使用 DisplayName *@
+                <input asp-for="ShippingAddress" class="form-control" />
+                <span asp-validation-for="ShippingAddress" class="text-danger"></span>
+            </div>
+
+            @* 如果 OrderCheckoutViewModel 中有其他屬性，也類似地添加它們的輸入框和驗證 *@
+            @* 例如：
+            @if (Model.GetType().GetProperty("Notes") != null) // 簡單檢查是否存在 Notes 屬性
+            {
+                <div class="form-group mb-3">
+                    <label asp-for="Notes" class="control-label"></label>
+                    <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="Notes" class="text-danger"></span>
+                </div>
+            }
+            *@
+
+            <h4>訂單總計: @ViewBag.Total.ToString("C")</h4>
+            <hr/>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">確認下單</button>
+                <a asp-controller="Cart" asp-action="Index" class="btn btn-secondary ms-2">返回購物車</a>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-4 offset-md-1">
+        <h5>訂單摘要</h5>
+        @{
+            // 假設您仍然希望在這裡顯示購物車內容
+            // 這裡的寫法是直接從服務容器獲取 ShoppingCart 實例
+            // 如果您的 ViewBag 或 ViewData 中已經有購物車數據，也可以使用它們
+            var cartForSummary = Context.RequestServices.GetRequiredService<SimpleShop.Models.ShoppingCart>();
+        }
+        @if (cartForSummary.Items.Any())
+        {
+                <ul class="list-group mb-3">
+                @foreach (var item in cartForSummary.Items)
+                {
+                            <li class="list-group-item d-flex justify-content-between lh-sm">
+                                <div>
+                                    <h6 class="my-0">@item.ProductName</h6>
+                                    <small class="text-muted">數量: @item.Quantity</small>
+                                </div>
+                                <span class="text-muted">@item.SubTotal.ToString("C")</span>
+                            </li>
+                }
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>總計 (TWD)</span>
+                        <strong>@cartForSummary.GetTotal().ToString("C")</strong>
+                    </li>
+                </ul>
+        }
+        else
+        {
+                <p>購物車是空的。</p>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
