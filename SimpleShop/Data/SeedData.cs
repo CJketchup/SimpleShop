@@ -54,19 +54,11 @@ namespace SimpleShop.Data
                 context.Products.AddRange(
                     new Product
                     {
-                        Name = "精美筆記本",
-                        Description = "高品質書寫用紙，適合各種筆類。",
-                        Price = 150.00m,
-                        StockQuantity = 100,
-                        ImageUrl = "/images/notebook.jpg" // 假設圖片放在 wwwroot/images/
-                    },
-                    new Product
-                    {
-                        Name = "專業鋼筆",
-                        Description = "流暢書寫體驗，商務人士首選。",
-                        Price = 1200.00m,
-                        StockQuantity = 50,
-                        ImageUrl = "/images/fountain_pen.jpg"
+                        Name = "機械鍵盤",
+                        Description = "青軸手感，電競與程式設計師的最愛。",
+                        Price = 2500.00m,
+                        StockQuantity = 30,
+                        ImageUrl = "/images/keyboard.jpg" // 假設圖片放在 wwwroot/images/
                     },
                     new Product
                     {
@@ -78,12 +70,31 @@ namespace SimpleShop.Data
                     },
                     new Product
                     {
-                        Name = "機械鍵盤",
-                        Description = "青軸手感，電競與程式設計師的最愛。",
-                        Price = 2500.00m,
-                        StockQuantity = 30,
-                        ImageUrl = "/images/keyboard.jpg"
+                        Name = "賽車椅",
+                        Description = "長時間使用不易出汗，碳鋼支架承受強大的操作體驗",
+                        Price = 22988.00m,
+                        StockQuantity = 10,
+                        ImageUrl = "/images/playseat_trophy.jpg"
+
+                    },
+                    new Product
+                    {
+                        Name = "精美筆記本",
+                        Description = "高品質書寫用紙，適合各種筆類。",
+                        Price = 150.00m,
+                        StockQuantity = 100,
+                        ImageUrl = "/images/notebook.jpg" 
+                    },
+                    new Product
+                    {
+                        Name = "專業鋼筆",
+                        Description = "流暢書寫體驗，商務人士首選。",
+                        Price = 1200.00m,
+                        StockQuantity = 50,
+                        ImageUrl = "/images/fountain_pen.jpg"
                     }
+                    
+                    
                 );
                 await context.SaveChangesAsync();
             }
